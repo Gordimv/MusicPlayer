@@ -4,7 +4,10 @@ A lightweight Firefox extension for controlling YouTube Music without constantly
 
 ## Features
 
-- Displays the current song title, artist, and album artwork.
+- Displays the current song title and artist.
+- Displays high-resolution album artwork.
+- Shows current playback time and track duration.
+- Seek to any point in the current song using the playback slider.
 - Play and pause the current track.
 - Skip to the previous or next track.
 - Control YouTube Music volume.
@@ -13,13 +16,15 @@ A lightweight Firefox extension for controlling YouTube Music without constantly
 - Automatically finds the currently playing YouTube Music tab.
 - Automatically follows playback when another YouTube Music tab becomes the active player.
 - Falls back to a loaded, active, or recently accessed YouTube Music tab when nothing is currently playing.
-- Runs locally with no API key, external server, or account integration required by Music Deck.
+- Runs locally with no API key, external server, or Music Deck account integration required.
 
 ## How It Works
 
-Music Deck uses a Firefox content script to read and control the YouTube Music player. The background script inspects open YouTube Music tabs and routes Music Deck commands to the best player candidate.
+Music Deck uses a Firefox content script to read and control the YouTube Music player.
 
-Player selection priority:
+The background script inspects open YouTube Music tabs and routes Music Deck commands to the best player candidate.
+
+### Player Selection Priority
 
 1. Currently playing YouTube Music tab.
 2. Tab with a loaded track.
@@ -27,6 +32,12 @@ Player selection priority:
 4. Most recently accessed reachable YouTube Music tab.
 
 This allows Music Deck to automatically follow playback across multiple YouTube Music tabs.
+
+## Installation
+
+Signed Firefox releases are available from the GitHub Releases section of this repository.
+
+Download the latest `.xpi` release and open it with Firefox to install Music Deck.
 
 ## Development Installation
 
@@ -51,4 +62,5 @@ MusicPlayer/
 ├── popup.html
 ├── popup.css
 ├── popup.js
+├── LICENSE
 └── README.md
