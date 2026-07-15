@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Miniplayer",
-  "version": "0.1.0",
-  "description": "A lightweight local Firefox controller for an open YouTube Music tab.",
+  "name": "Music Deck",
+  "version": "0.3.0",
+  "description": "A lightweight Firefox controller for YouTube Music.",
   "permissions": [
     "tabs"
   ],
@@ -31,7 +31,7 @@
   ],
   "browser_specific_settings": {
     "gecko": {
-      "id": "music-deck@jarielfox.local",
+      "id": "music-deck@gordimv.local",
       "strict_min_version": "109.0"
     }
   }

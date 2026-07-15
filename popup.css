@@ -118,6 +118,41 @@ h1 {
     font-size: 13px;
 }
 
+.seek-control {
+    display: grid;
+
+    width: 100%;
+
+    grid-template-columns: 38px 1fr 38px;
+    align-items: center;
+
+    gap: 8px;
+}
+
+.seek-control input[type="range"] {
+    width: 100%;
+
+    accent-color: var(--scarlet);
+
+    cursor: pointer;
+}
+
+.seek-control input[type="range"]:disabled {
+    cursor: default;
+    opacity: 0.45;
+}
+
+.time-value {
+    color: var(--muted);
+
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+}
+
+.time-value:last-child {
+    text-align: right;
+}
+
 .controls {
     display: flex;
 

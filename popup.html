@@ -16,7 +16,7 @@
 <body>
 <main class="music-deck">
     <header>
-        <span class="eyebrow">JARIELFOX</span>
+        <span class="eyebrow">Miniplayer</span>
 
         <h1>MUSIC DECK</h1>
     </header>
@@ -36,6 +36,32 @@
             <div id="artist" class="artist">
                 YouTube Music
             </div>
+        </div>
+
+        <div class="seek-control">
+            <span
+                    id="currentTime"
+                    class="time-value"
+            >
+                0:00
+            </span>
+
+            <input
+                    id="seek"
+                    type="range"
+                    min="0"
+                    max="0"
+                    step="0.1"
+                    value="0"
+                    aria-label="Song position"
+            >
+
+            <span
+                    id="duration"
+                    class="time-value"
+            >
+                0:00
+            </span>
         </div>
 
         <div class="controls">

@@ -21,30 +21,54 @@ function getArtwork() {
 }
 
 function getMediaElement() {
-    return document.querySelector("video");
+    const mediaElements = Array.from(
+        document.querySelectorAll("video, audio")
+    );
+
+    const playingMedia = mediaElements.find(
+        (media) => !media.paused && !media.ended
+    );
+
+    if (playingMedia) {
+        return playingMedia;
+    }
+
+    const loadedMedia = mediaElements.find(
+        (media) =>
+            Number.isFinite(media.duration) &&
+            media.duration > 0
+    );
+
+    return loadedMedia ?? mediaElements[0] ?? null;
 }
 
 function getRepeatButton() {
-    const directMatch = document.querySelector(SELECTORS.repeatButton);
+    const directMatch = document.querySelector(
+        SELECTORS.repeatButton
+    );
 
     if (directMatch) {
         return directMatch;
     }
 
-    const playerBar = document.querySelector("ytmusic-player-bar");
+    const playerBar = document.querySelector(
+        "ytmusic-player-bar"
+    );
 
     if (!playerBar) {
         return null;
     }
 
     const buttons = playerBar.querySelectorAll(
-        "button, tp-yt-paper-icon-button"
+        "button, yt-icon-button, tp-yt-paper-icon-button"
     );
 
     return Array.from(buttons).find((button) => {
         const label = [
             button.getAttribute("aria-label"),
-            button.getAttribute("title")
+            button.getAttribute("title"),
+            button.querySelector("button")
+                ?.getAttribute("aria-label")
         ]
             .filter(Boolean)
             .join(" ")
@@ -63,7 +87,9 @@ function getRepeatState() {
 
     const label = [
         button.getAttribute("aria-label"),
-        button.getAttribute("title")
+        button.getAttribute("title"),
+        button.querySelector("button")
+            ?.getAttribute("aria-label")
     ]
         .filter(Boolean)
         .join(" ")
@@ -87,7 +113,10 @@ function getRepeatState() {
         return "ALL";
     }
 
-    const pressed = button.getAttribute("aria-pressed");
+    const pressed =
+        button.getAttribute("aria-pressed") ??
+        button.querySelector("button")
+            ?.getAttribute("aria-pressed");
 
     if (pressed === "true") {
         return "ALL";
@@ -99,14 +128,26 @@ function getRepeatState() {
 function getPlayerState() {
     const media = getMediaElement();
 
+    const currentTime = Number.isFinite(media?.currentTime)
+        ? media.currentTime
+        : 0;
+
+    const duration = Number.isFinite(media?.duration)
+        ? media.duration
+        : 0;
+
     return {
         title: getText(SELECTORS.title),
         artist: getText(SELECTORS.artist),
         artwork: getArtwork(),
         isPlaying: media ? !media.paused : false,
-        volume: media ? Math.round(media.volume * 100) : 100,
+        volume: media
+            ? Math.round(media.volume * 100)
+            : 100,
         isMuted: media?.muted ?? false,
-        repeatState: getRepeatState()
+        repeatState: getRepeatState(),
+        currentTime,
+        duration
     };
 }
 
@@ -136,7 +177,10 @@ function setVolume(volume) {
 
     media.volume = normalizedVolume;
 
-    if (normalizedVolume > 0 && media.muted) {
+    if (
+        normalizedVolume > 0 &&
+        media.muted
+    ) {
         media.muted = false;
     }
 
@@ -151,6 +195,31 @@ function toggleMute() {
     }
 
     media.muted = !media.muted;
+
+    return true;
+}
+
+function seekTo(time) {
+    const media = getMediaElement();
+
+    if (
+        !media ||
+        !Number.isFinite(media.duration) ||
+        media.duration <= 0
+    ) {
+        return false;
+    }
+
+    const requestedTime = Number(time);
+
+    if (!Number.isFinite(requestedTime)) {
+        return false;
+    }
+
+    media.currentTime = Math.min(
+        media.duration,
+        Math.max(0, requestedTime)
+    );
 
     return true;
 }
@@ -176,21 +245,29 @@ function cycleRepeat() {
 browser.runtime.onMessage.addListener((message) => {
     switch (message.type) {
         case "GET_STATE":
-            return Promise.resolve(getPlayerState());
+            return Promise.resolve(
+                getPlayerState()
+            );
 
         case "PLAY_PAUSE":
             return Promise.resolve({
-                success: clickControl(SELECTORS.playPauseButton)
+                success: clickControl(
+                    SELECTORS.playPauseButton
+                )
             });
 
         case "PREVIOUS":
             return Promise.resolve({
-                success: clickControl(SELECTORS.previousButton)
+                success: clickControl(
+                    SELECTORS.previousButton
+                )
             });
 
         case "NEXT":
             return Promise.resolve({
-                success: clickControl(SELECTORS.nextButton)
+                success: clickControl(
+                    SELECTORS.nextButton
+                )
             });
 
         case "SET_VOLUME":
@@ -203,8 +280,15 @@ browser.runtime.onMessage.addListener((message) => {
                 success: toggleMute()
             });
 
+        case "SEEK_TO":
+            return Promise.resolve({
+                success: seekTo(message.time)
+            });
+
         case "CYCLE_REPEAT":
-            return Promise.resolve(cycleRepeat());
+            return Promise.resolve(
+                cycleRepeat()
+            );
 
         default:
             return Promise.resolve({
