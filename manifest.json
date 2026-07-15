@@ -1,1 +1,38 @@
-
+{
+  "manifest_version": 3,
+  "name": "JarielFox Music Deck",
+  "version": "0.1.0",
+  "description": "A lightweight local Firefox controller for an open YouTube Music tab.",
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://music.youtube.com/*"
+  ],
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "action": {
+    "default_title": "Music Deck",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://music.youtube.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "music-deck@jarielfox.local",
+      "strict_min_version": "109.0"
+    }
+  }
+}

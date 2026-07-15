@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Music Deck</title>
+
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+<main class="music-deck">
+    <header>
+        <span class="eyebrow">JARIELFOX</span>
+        <h1>MUSIC DECK</h1>
+    </header>
+
+    <section id="player" class="player hidden">
+        <img
+                id="artwork"
+                class="artwork"
+                alt="Album artwork"
+        >
+
+        <div class="track-info">
+            <div id="title" class="title">Nothing Playing</div>
+            <div id="artist" class="artist">YouTube Music</div>
+        </div>
+
+        <div class="controls">
+            <button id="previous" type="button" aria-label="Previous track">
+                &#9198;
+            </button>
+
+            <button
+                    id="playPause"
+                    class="primary-control"
+                    type="button"
+                    aria-label="Play or pause"
+            >
+                &#9654;
+            </button>
+
+            <button id="next" type="button" aria-label="Next track">
+                &#9197;
+            </button>
+        </div>
+    </section>
+
+    <section id="status" class="status">
+        Searching for YouTube Music...
+    </section>
+</main>
+
+<script src="popup.js"></script>
+</body>
+</html>
