@@ -5,11 +5,17 @@ const artwork = document.getElementById("artwork");
 const title = document.getElementById("title");
 const artist = document.getElementById("artist");
 
+const repeatButton = document.getElementById("repeat");
 const previousButton = document.getElementById("previous");
 const playPauseButton = document.getElementById("playPause");
 const nextButton = document.getElementById("next");
 
+const muteButton = document.getElementById("mute");
+const volumeSlider = document.getElementById("volume");
+const volumeValue = document.getElementById("volumeValue");
+
 let refreshTimer = null;
+let isChangingVolume = false;
 
 async function request(payload) {
     return browser.runtime.sendMessage({
@@ -30,6 +36,49 @@ function showPlayer() {
     player.classList.remove("hidden");
 }
 
+function renderRepeatState(repeatState) {
+    repeatButton.classList.remove(
+        "repeat-all",
+        "repeat-one"
+    );
+
+    switch (repeatState) {
+        case "ALL":
+            repeatButton.textContent = "🔁";
+            repeatButton.title = "Repeat queue";
+            repeatButton.setAttribute(
+                "aria-label",
+                "Repeat queue"
+            );
+
+            repeatButton.classList.add("repeat-all");
+
+            break;
+
+        case "ONE":
+            repeatButton.textContent = "🔂";
+            repeatButton.title = "Repeat current song";
+            repeatButton.setAttribute(
+                "aria-label",
+                "Repeat current song"
+            );
+
+            repeatButton.classList.add("repeat-one");
+
+            break;
+
+        default:
+            repeatButton.textContent = "↻";
+            repeatButton.title = "Repeat off";
+            repeatButton.setAttribute(
+                "aria-label",
+                "Repeat off"
+            );
+
+            break;
+    }
+}
+
 function renderState(state) {
     title.textContent = state.title || "Nothing Playing";
     artist.textContent = state.artist || "YouTube Music";
@@ -42,7 +91,23 @@ function renderState(state) {
         artwork.classList.add("hidden");
     }
 
-    playPauseButton.textContent = state.isPlaying ? "❚❚" : "▶";
+    playPauseButton.textContent = state.isPlaying
+        ? "❚❚"
+        : "▶";
+
+    renderRepeatState(state.repeatState);
+
+    muteButton.textContent = (
+        state.isMuted ||
+        state.volume === 0
+    )
+        ? "🔇"
+        : "🔊";
+
+    if (!isChangingVolume) {
+        volumeSlider.value = state.volume;
+        volumeValue.textContent = `${state.volume}%`;
+    }
 
     showPlayer();
 }
@@ -54,8 +119,14 @@ async function refreshState() {
         });
 
         if (!response?.ok) {
-            if (response?.error === "YOUTUBE_MUSIC_NOT_FOUND") {
-                showStatus("Open YouTube Music to activate Music Deck.");
+            if (
+                response?.error ===
+                "YOUTUBE_MUSIC_NOT_FOUND"
+            ) {
+                showStatus(
+                    "Open YouTube Music to activate Music Deck."
+                );
+
                 return;
             }
 
@@ -68,9 +139,14 @@ async function refreshState() {
 
         renderState(response.data);
     } catch (error) {
-        console.error("Music Deck refresh failed:", error);
+        console.error(
+            "Music Deck refresh failed:",
+            error
+        );
 
-        showStatus("Music Deck encountered an error.");
+        showStatus(
+            "Music Deck encountered an error."
+        );
     }
 }
 
@@ -78,11 +154,21 @@ async function sendControl(type) {
     try {
         await request({ type });
 
-        window.setTimeout(refreshState, 150);
+        window.setTimeout(
+            refreshState,
+            150
+        );
     } catch (error) {
-        console.error(`Music Deck command ${type} failed:`, error);
+        console.error(
+            `Music Deck command ${type} failed:`,
+            error
+        );
     }
 }
+
+repeatButton.addEventListener("click", () => {
+    sendControl("CYCLE_REPEAT");
+});
 
 previousButton.addEventListener("click", () => {
     sendControl("PREVIOUS");
@@ -96,9 +182,34 @@ nextButton.addEventListener("click", () => {
     sendControl("NEXT");
 });
 
+muteButton.addEventListener("click", () => {
+    sendControl("TOGGLE_MUTE");
+});
+
+volumeSlider.addEventListener("input", () => {
+    isChangingVolume = true;
+
+    volumeValue.textContent =
+        `${volumeSlider.value}%`;
+
+    request({
+        type: "SET_VOLUME",
+        volume: Number(volumeSlider.value)
+    });
+});
+
+volumeSlider.addEventListener("change", () => {
+    isChangingVolume = false;
+
+    refreshState();
+});
+
 refreshState();
 
-refreshTimer = window.setInterval(refreshState, 1000);
+refreshTimer = window.setInterval(
+    refreshState,
+    1000
+);
 
 window.addEventListener("unload", () => {
     if (refreshTimer !== null) {

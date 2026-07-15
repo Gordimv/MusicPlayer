@@ -124,7 +124,7 @@ h1 {
     align-items: center;
     justify-content: center;
 
-    gap: 18px;
+    gap: 14px;
 }
 
 .controls button {
@@ -132,6 +132,8 @@ h1 {
 
     width: 44px;
     height: 44px;
+
+    padding: 0;
 
     place-items: center;
 
@@ -146,7 +148,9 @@ h1 {
     transition:
             transform 120ms ease,
             background 120ms ease,
-            border-color 120ms ease;
+            border-color 120ms ease,
+            color 120ms ease,
+            box-shadow 120ms ease;
 }
 
 .controls button:hover {
@@ -168,6 +172,86 @@ h1 {
 .controls .primary-control:hover {
     background: var(--scarlet);
     border-color: var(--scarlet);
+}
+
+.repeat-control {
+    font-size: 20px;
+}
+
+.repeat-control.repeat-all,
+.repeat-control.repeat-one {
+    border-color: var(--scarlet);
+
+    background: rgba(239, 23, 77, 0.18);
+    color: var(--scarlet);
+
+    box-shadow:
+            0 0 12px rgba(239, 23, 77, 0.12);
+}
+
+.repeat-control.repeat-one {
+    background: rgba(239, 23, 77, 0.28);
+
+    box-shadow:
+            0 0 16px rgba(239, 23, 77, 0.2);
+}
+
+.volume-control {
+    display: grid;
+
+    width: 100%;
+
+    grid-template-columns: 36px 1fr 44px;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-top: 2px;
+}
+
+.sound-button {
+    display: grid;
+
+    width: 36px;
+    height: 36px;
+
+    padding: 0;
+
+    place-items: center;
+
+    border: 1px solid var(--border);
+    border-radius: 50%;
+
+    background: var(--surface);
+    color: var(--text);
+
+    cursor: pointer;
+
+    transition:
+            background 120ms ease,
+            border-color 120ms ease;
+}
+
+.sound-button:hover {
+    background: var(--surface-hover);
+    border-color: var(--crimson);
+}
+
+.volume-control input[type="range"] {
+    width: 100%;
+
+    accent-color: var(--scarlet);
+
+    cursor: pointer;
+}
+
+.volume-value {
+    color: var(--muted);
+
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+
+    text-align: right;
 }
 
 .status {

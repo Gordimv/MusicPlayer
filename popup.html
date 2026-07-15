@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Music Deck</title>
 
@@ -13,6 +17,7 @@
 <main class="music-deck">
     <header>
         <span class="eyebrow">JARIELFOX</span>
+
         <h1>MUSIC DECK</h1>
     </header>
 
@@ -24,12 +29,32 @@
         >
 
         <div class="track-info">
-            <div id="title" class="title">Nothing Playing</div>
-            <div id="artist" class="artist">YouTube Music</div>
+            <div id="title" class="title">
+                Nothing Playing
+            </div>
+
+            <div id="artist" class="artist">
+                YouTube Music
+            </div>
         </div>
 
         <div class="controls">
-            <button id="previous" type="button" aria-label="Previous track">
+            <button
+                    id="repeat"
+                    class="repeat-control"
+                    type="button"
+                    aria-label="Repeat off"
+                    title="Repeat off"
+            >
+                ↻
+            </button>
+
+            <button
+                    id="previous"
+                    type="button"
+                    aria-label="Previous track"
+                    title="Previous track"
+            >
                 &#9198;
             </button>
 
@@ -38,13 +63,48 @@
                     class="primary-control"
                     type="button"
                     aria-label="Play or pause"
+                    title="Play or pause"
             >
                 &#9654;
             </button>
 
-            <button id="next" type="button" aria-label="Next track">
+            <button
+                    id="next"
+                    type="button"
+                    aria-label="Next track"
+                    title="Next track"
+            >
                 &#9197;
             </button>
+        </div>
+
+        <div class="volume-control">
+            <button
+                    id="mute"
+                    class="sound-button"
+                    type="button"
+                    aria-label="Mute or unmute"
+                    title="Mute or unmute"
+            >
+                🔊
+            </button>
+
+            <input
+                    id="volume"
+                    type="range"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="100"
+                    aria-label="Volume"
+            >
+
+            <span
+                    id="volumeValue"
+                    class="volume-value"
+            >
+                100%
+            </span>
         </div>
     </section>
 
