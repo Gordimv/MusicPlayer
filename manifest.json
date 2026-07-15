@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "JarielFox Music Deck",
+  "name": "Miniplayer",
   "version": "0.1.0",
   "description": "A lightweight local Firefox controller for an open YouTube Music tab.",
   "permissions": [
@@ -15,7 +15,7 @@
     ]
   },
   "action": {
-    "default_title": "Music Deck",
+    "default_title": "Current Song",
     "default_popup": "popup.html"
   },
   "content_scripts": [
