@@ -17,7 +17,39 @@ function getText(selector) {
 function getArtwork() {
     const image = document.querySelector(SELECTORS.artwork);
 
-    return image?.currentSrc || image?.src || "";
+    const artworkUrl =
+        image?.currentSrc ||
+        image?.src ||
+        "";
+
+    if (!artworkUrl) {
+        return "";
+    }
+
+    try {
+        const url = new URL(artworkUrl);
+
+        if (
+            url.hostname.endsWith("googleusercontent.com") ||
+            url.hostname.endsWith("ggpht.com")
+        ) {
+            url.search = "";
+
+            url.pathname = url.pathname.replace(
+                /=w\d+-h\d+.*$/,
+                "=w544-h544-l90-rj"
+            );
+
+            return url.toString();
+        }
+    } catch (error) {
+        console.warn(
+            "Music Deck could not upgrade artwork URL:",
+            error
+        );
+    }
+
+    return artworkUrl;
 }
 
 function getMediaElement() {
